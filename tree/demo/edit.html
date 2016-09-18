@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>jQuery treeview</title>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1"/>
+<link rel="stylesheet" href="../jquery.treeview.css" />
+<link rel="stylesheet" href="screen.css" />
+<script src="../lib/jquery.js" type="text/javascript"></script>
+<script src="../lib/jquery.cookie.js" type="text/javascript"></script>
+<script src="../jquery.treeview.js" type="text/javascript"></script>
+<script src="../jquery.treeview.edit.js" type="text/javascript"></script>	
+<script type="text/javascript">
+$(function() {
+	$("#browser").treeview();
+})		
+</script>	
+</head>
+<body>
+<div id="main">
+	<ul id="browser" class="filetree">
+		<li><span class="folder">文件夹2</span>
+			<ul>
+				<li><span class="file">文件1</span></li>
+				<li><span class="file">文件2</span></li>
+				<li><span class="file">文件3</span></li>
+			</ul>
+		</li>
+	</ul>
+</div>
+</body>
+</html>
