@@ -28,7 +28,7 @@
   .log .logI{width:100%;height:20%;text-align:center;margin-top:5%;}
   .log .logB{width:100%;height:35%;padding-top:3%;text-align:center;}
   .log .logB .save{margin-right:10%;}
-  .mask{width:100%;height:100%;background:#adadad;position:absolute;z-index:998;display:none;left:0;top:0;filter:alpha(opacity=30); /*IE滤镜*/-moz-opacity:0.3; /*Firefox私有*/opacity:0.3;/*其他}
+  .mask{width:100%;height:100%;background:#adadad;position:absolute;z-index:998;display:none;left:0;top:0;filter:alpha(opacity=30); -moz-opacity:0.3; opacity:0.3;}
   </style>
 </head>
 

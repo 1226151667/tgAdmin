@@ -1,4 +1,4 @@
-<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -7,7 +7,7 @@
   <meta name="author" content="ThemeBucket">
   <link rel="shortcut icon" href="#" type="image/png">
 
-  <title>链接管理</title>
+  <title>Tree View</title>
 
   <!--external css-->
   <link rel="stylesheet" type="text/css" href="__PUBLIC__/js/fuelux/css/tree-style.css" />
@@ -20,23 +20,6 @@
   <script src="__PUBLIC__/js/html5shiv.js"></script>
   <script src="__PUBLIC__/js/respond.min.js"></script>
   <![endif]-->
-  <style>
-  ul,li{list-style:none;}
-  .folder{cursor:pointer;}
-  .file{cursor:pointer;}
-  a{display:none;}
-  .iptReset{margin:10px 10px;}
-
-  .log{height:50%;width:50%;left:25%;top:25%;border:1px solid #e0e0e0;position:absolute;z-index:999;background:white;font-size:16px;display:block;}
-  .log .logT{width:100%;height:15%;padding:3% 0 0 2%;background:#f0f0f0;color:#8e8e8e;font-weight:bold;}
-  .log input{width:50%;height:60%;border-radius:3px;border:1px solid #adadad;}
-  .log button{height:40%;width:15%;border-radius:5px;border:0 none;background:#01b468;color:white;font-weight: bold;}
-  .log .logI{width:100%;height:20%;text-align:center;margin-top:5%;}
-  .log .logB{width:100%;height:35%;padding-top:3%;text-align:center;}
-  .log .logB .save{margin-right:10%;}
-  .mask{width:100%;height:100%;background:#adadad;position:absolute;z-index:998;display:none;left:0;top:0;filter:alpha(opacity=30); -moz-opacity:0.3; opacity:0.3;}
-
-  </style>
 </head>
 
 <body class="sticky-header">
@@ -79,9 +62,9 @@
                 <li class="active"><a href="index.html"><i class="fa fa-home"></i> <span>首页</span></a></li>
                 <li class="menu-list"><a href="#"><i class="fa fa-th-list"></i> <span>推广管理</span></a>
                     <ul class="sub-menu-list">
-                        <li><a href="<?php echo U('User/page1');?>"> 用户管理</a></li>
-                        <li><a href="<?php echo U('User/page2');?>"> 链接管理</a></li>
-                        <li><a href="<?php echo U('User/page3');?>"> 活动页面</a></li>
+                        <li><a href="{:U('User/page1')}"> 用户管理</a></li>
+                        <li><a href="{:U('User/page2')}"> 链接管理</a></li>
+                        <li><a href="{:U('User/page3')}"> 活动页面</a></li>
                     </ul>
                 </li>
             </ul>
@@ -298,112 +281,146 @@
         </div>
         <!--@2 标题部分 end-->
 
-       <!-- page heading start-->
+        <!-- page heading start-->
         <div class="page-heading">
             <h3>
-                活动页面
+                Tree View
             </h3>
             <ul class="breadcrumb">
                 <li>
-                    <a href="#">首页</a>
+                    <a href="#">Dashboard</a>
                 </li>
                 <li>
-                    <a href="#">推广管理</a>
+                    <a href="#">Components</a>
                 </li>
-                <li class="active"> 活动页面 </li>
+                <li class="active"> Tree View </li>
             </ul>
         </div>
         <!-- page heading end-->
 
         <!--body wrapper start-->
         <div class="wrapper">
-            <div class="col-md-12">
-                <div class="panel">
-                    <div class="panel-heading">
-                        <div class="btn-group iptReset page">
-                          <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <?php echo ($pageName); ?>
-                            <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu" role="menu">
-                            <?php if(is_array($pList)): $i = 0; $__LIST__ = $pList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$row): $mod = ($i % 2 );++$i;?><li><a pId="<?php echo ($row["id"]); ?>"><?php echo ($row["name"]); ?></a></li><?php endforeach; endif; else: echo "" ;endif; ?>
-                          </ul>
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            Tree Style #1
+                           <span class="tools pull-right">
+                                <a class="fa fa-chevron-down" href="javascript:;"></a>
+                                <a class="fa fa-times" href="javascript:;"></a>
+                            </span>
                         </div>
-                        <div class="btn-group iptReset form">
-                          <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                            <?php echo ($form); ?>
-                            <span class="caret"></span>
-                          </button>
-                          <ul class="dropdown-menu" role="menu">
-                            <li><a fId="1">百度</a></li>
-                            <li><a fId="2">360</a></li>
-                            <li><a fId="3">搜狗</a></li>
-                            <li><a fId="4">新浪扶翼</a></li>
-                            <li><a fId="5">百度网盟</a></li>
-                            <li><a fId="6">粉丝通</a></li>
-                            <li><a fId="7">神马</a></li>
-                            <li><a fId="8">陌陌</a></li>
-                          </ul>
-                        </div>
-                        <a class="btn btn-success iptReset sub" role="button">搜 索</a>
-                        <div class="input-group iptReset" style="display:none;">
-                            <span class="input-group-addon">推广链接</span>
-                            <input type="text" class="form-control" readonly="readonly" />
+                        <div class="panel-body">
+                            <div id="FlatTree" class="tree tree-plus-minus">
+                                <div class = "tree-folder" style="display:none;">
+                                    <div class="tree-folder-header">
+                                        <i class="fa fa-folder"></i>
+                                        <div class="tree-folder-name"></div>
+                                    </div>
+                                    <div class="tree-folder-content"></div>
+                                    <div class="tree-loader" style="display:none"></div>
+                                </div>
+                                <div class="tree-item" style="display:none;">
+                                    <i class="tree-dot"></i>
+                                    <div class="tree-item-name"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="panel-body">
-                        <ul id="browser" class="filetree">
-                            <li>
-                                <span class="folder">
-                                    <i class="fa fa-folder"></i>&nbsp;&nbsp;<?php echo ($pageName); ?>
-                                    <a><i class="fa fa-plus"></i></a>
-                                </span>
-                                <ul>
-                                    <?php if(is_array($lList)): $i = 0; $__LIST__ = $lList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$row): $mod = ($i % 2 );++$i;?><li>
-                                            <span class="file">
-                                                <i class="fa fa-file"></i>&nbsp;&nbsp;<?php echo ($row["keyword"]); ?>
-                                                <a><i class="fa fa-edit"></i></a>
-                                                <a><i class="fa fa-trash-o"></i></a>
-                                            </span>
-                                        </li><?php endforeach; endif; else: echo "" ;endif; ?>
-                                </ul>
-                            </li>
-                        </ul>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            Tree Style #2
+                           <span class="tools pull-right">
+                                <a class="fa fa-chevron-down" href="javascript:;"></a>
+                                <a class="fa fa-times" href="javascript:;"></a>
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <div id="FlatTree2" class="tree">
+                                <div class = "tree-folder" style="display:none;">
+                                    <div class="tree-folder-header">
+                                        <i class="fa fa-folder"></i>
+                                        <div class="tree-folder-name"></div>
+                                    </div>
+                                    <div class="tree-folder-content"></div>
+                                    <div class="tree-loader" style="display:none"></div>
+                                </div>
+                                <div class="tree-item" style="display:none;">
+                                    <i class="tree-dot"></i>
+                                    <div class="tree-item-name"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            Tree Style #3
+                           <span class="tools pull-right">
+                                <a class="fa fa-chevron-down" href="javascript:;"></a>
+                                <a class="fa fa-times" href="javascript:;"></a>
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <div id="FlatTree3" class="tree tree-plus-minus tree-solid-line tree-unselectable">
+                                <div class = "tree-folder" style="display:none;">
+                                    <div class="tree-folder-header">
+                                        <i class="fa fa-folder"></i>
+                                        <div class="tree-folder-name"></div>
+                                    </div>
+                                    <div class="tree-folder-content"></div>
+                                    <div class="tree-loader" style="display:none"></div>
+                                </div>
+                                <div class="tree-item" style="display:none;">
+                                    <i class="tree-dot"></i>
+                                    <div class="tree-item-name"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel">
+                        <div class="panel-heading">
+                            Tree Style #4
+                          <span class="tools pull-right">
+                                <a class="fa fa-chevron-down" href="javascript:;"></a>
+                                <a class="fa fa-times" href="javascript:;"></a>
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <div id="FlatTree4" class="tree tree-solid-line">
+                                <div class = "tree-folder" style="display:none;">
+                                    <div class="tree-folder-header">
+                                        <i class="fa fa-folder"></i>
+                                        <div class="tree-folder-name"></div>
+                                    </div>
+                                    <div class="tree-folder-content"></div>
+                                    <div class="tree-loader" style="display:none"></div>
+                                </div>
+                                <div class="tree-item" style="display:none;">
+                                    <i class="tree-dot"></i>
+                                    <div class="tree-item-name"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <!--body wrapper end-->
 
-        <!-- 蒙罩层 start -->
-        <div class="mask"></div>
-        <!-- 蒙罩层 end -->
-
-        <!-- 弹出框 start-->
-        <div id="log" class="log">
-            <div class="logT">添加-活动页面</div>
-            <div style="display:none;" class="logId">
-                <label>id：</label>
-                <input type="text" name="id" />
-            </div>
-            <div class="logI">
-                <label>页面名称：</label>
-                <input type="text" name="name" />
-            </div>
-            <div class="logI">
-                <label>链接地址：</label>
-                <input type="text" name="url" />
-            </div>
-            <div class="logB">
-                <button class="save" type="button">保&nbsp;&nbsp;&nbsp;存</button>
-                <button class="cancel" type="button">取&nbsp;&nbsp;&nbsp;消</button>
-            </div>
-        </div>
-        <!-- 弹出框 end -->
-
         <!--footer section start-->
         <footer class="sticky-footer">
-            2016 &copy; Admin by 大连再生资源
+            2014 &copy; AdminEx by <a href="http://www.mycodes.net/" target="_blank">源码之家</a>
         </footer>
         <!--footer section end-->
 
@@ -427,72 +444,11 @@
 <!--common scripts for all pages-->
 <script src="__PUBLIC__/js/scripts.js"></script>
 
+
+
 <script>
     jQuery(document).ready(function() {
         TreeView.init();
-        $(".folder").click(function(){
-            var fileDp = $(".file").css("display");
-            if(fileDp=="none"){
-                $(".file").css("display","block");    
-            }else{
-                $(".file").css("display","none");
-            }
-        });
-        var jumpUrl = '';
-        var fId = 0;
-        var pId = 0;
-        var seaS ='';
-        $(".folder").hover(function(){
-            $(this).find("a").css("display","inline-block");
-        },function(){
-            $(this).find("a").css("display","none");
-        });
-        $(".file").hover(function(){
-            $(this).find("a").css("display","inline-block");
-        },function(){
-            $(this).find("a").css("display","none");
-        });
-        $(".iptReset a").click(function(){
-            $(this).parent().parent().parent().find("button").text($(this).text());
-        });
-        $(".form a").click(function(){
-            fId = $(this).attr("fId");
-        });
-        $(".page a").click(function(){
-            pId = $(this).attr("pId");
-        });
-        $(".sub").click(function(){
-            var url = window.location.href;
-            var colu = url.split("?");
-            var rs = 0;
-            if(colu[1]){
-                var strs = colu[1].split("&");
-                if(strs){
-                    var pId0 = strs[1].split("=");
-                    var fId0 = strs[0].split("=");        
-                }    
-            }
-            if(pId==0){
-               if(pId0){
-                    pId=pId0[1];
-               }else{
-                    alert("请选择活动页面");
-                    rs=1;    
-               } 
-            }
-            if(fId==0){
-               if(fId0){
-                    fId=fId0[1];
-               }else{
-                    alert("请选择推广平台");
-                    rs=1;
-               } 
-            }
-            if(rs==0){
-                jumpUrl = '?fId='+fId+'&pId='+pId;    
-                window.location.href=jumpUrl;
-            }    
-        });
     });
 </script>
 

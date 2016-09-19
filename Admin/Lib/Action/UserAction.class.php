@@ -9,6 +9,32 @@ class UserAction extends Action {
 		$this->display("user");
     }
     public function page2(){
+        $obj = M("link");
+        $page = M("page");
+        $where = 'pId=0';
+        $formArr = array("推广平台","百度","360","搜狗","新浪扶翼","百度网盟","粉丝通","神马","陌陌");
+        $form = $formArr[0];
+        $pageName = '活动页面';
+        if($_GET){
+            $fId = $this->_get("fId");
+            $pId = $this->_get("pId");
+            if($pId){
+                $pageInfo = $page->where("id={$pId}")->find();
+                $pageName = $pageInfo['name'];
+            }
+            if($fId){
+                $form = $formArr[$fId];
+            }
+            if($pId && $fId){
+                $where = "form=".$fId." and pId=".$pId;
+            }
+        }
+        $lList = $obj->where($where)->field("t0.*,p.name as pageName,p.url")->alias("t0")->join("page p on p.id=t0.pId")->select();
+        $pList = $page->select();
+        $this->assign("pageName",$pageName);
+        $this->assign("form",$form);
+        $this->assign("lList",$lList);
+        $this->assign("pList",$pList);
 		$this->display("link");
     }
     public function page3(){

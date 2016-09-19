@@ -336,14 +336,14 @@
                 </td>
                 <td>
                     <p>
-                        <?php switch($row["form"]): case "0": ?>百度<?php break;?>
-                            <?php case "1": ?>360<?php break;?>
-                            <?php case "2": ?>搜狗<?php break;?>
-                            <?php case "3": ?>新浪扶翼<?php break;?>
-                            <?php case "4": ?>百度网盟<?php break;?>
-                            <?php case "5": ?>粉丝通<?php break;?>
-                            <?php case "6": ?>神马<?php break;?>
-                            <?php case "7": ?>陌陌<?php break;?>
+                        <?php switch($row["form"]): case "1": ?>百度<?php break;?>
+                            <?php case "2": ?>360<?php break;?>
+                            <?php case "3": ?>搜狗<?php break;?>
+                            <?php case "4": ?>新浪扶翼<?php break;?>
+                            <?php case "5": ?>百度网盟<?php break;?>
+                            <?php case "6": ?>粉丝通<?php break;?>
+                            <?php case "7": ?>神马<?php break;?>
+                            <?php case "8": ?>陌陌<?php break;?>
                             <?php default: ?>未知<?php endswitch;?>
                     </p>
                     <a target="_blank" href="<?php echo ($row["url"]); ?>?ikey=<?php echo ($row["parameter"]); ?>">
