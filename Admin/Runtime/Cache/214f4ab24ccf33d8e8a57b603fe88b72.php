@@ -26,12 +26,14 @@
   .file{cursor:pointer;}
   a{display:none;}
   .iptReset{margin:10px 10px;}
+  #browser li ul li{margin-top:10px;}
+  #browser li ul{overflow-y:scroll;height:500px;}
 
-  .log{height:50%;width:50%;left:25%;top:25%;border:1px solid #e0e0e0;position:absolute;z-index:999;background:white;font-size:16px;display:block;}
+  .log{height:50%;width:50%;left:25%;top:25%;border:1px solid #e0e0e0;position:absolute;z-index:999;background:white;font-size:16px;display:none;}
   .log .logT{width:100%;height:15%;padding:3% 0 0 2%;background:#f0f0f0;color:#8e8e8e;font-weight:bold;}
   .log input{width:50%;height:60%;border-radius:3px;border:1px solid #adadad;}
   .log button{height:40%;width:15%;border-radius:5px;border:0 none;background:#01b468;color:white;font-weight: bold;}
-  .log .logI{width:100%;height:20%;text-align:center;margin-top:5%;}
+  .log .logI{width:100%;height:15%;text-align:center;margin-top:3%;}
   .log .logB{width:100%;height:35%;padding-top:3%;text-align:center;}
   .log .logB .save{margin-right:10%;}
   .mask{width:100%;height:100%;background:#adadad;position:absolute;z-index:998;display:none;left:0;top:0;filter:alpha(opacity=30); -moz-opacity:0.3; opacity:0.3;}
@@ -71,12 +73,12 @@
                 <ul class="nav nav-pills nav-stacked custom-nav">
                   <li><a href="#"><i class="fa fa-user"></i> <span>个人信息</span></a></li>
                   <li><a href="#"><i class="fa fa-cog"></i> <span>设置</span></a></li>
-                  <li><a href="#"><i class="fa fa-sign-out"></i> <span>注销</span></a></li>
+                  <li><a href="<?php echo U("Enter/open2");?>"><i class="fa fa-sign-out"></i> <span>注销</span></a></li>
                 </ul>
             </div>
             <!--侧边导航栏 start-->
             <ul class="nav nav-pills nav-stacked custom-nav">
-                <li class="active"><a href="index.html"><i class="fa fa-home"></i> <span>首页</span></a></li>
+                <!-- <li class="active"><a href="index.html"><i class="fa fa-home"></i> <span>首页</span></a></li> -->
                 <li class="menu-list"><a href="#"><i class="fa fa-th-list"></i> <span>推广管理</span></a>
                     <ul class="sub-menu-list">
                         <li><a href="<?php echo U('User/page1');?>"> 用户管理</a></li>
@@ -287,7 +289,7 @@
                         <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
                             <li><a href="#"><i class="fa fa-user"></i>  个人信息</a></li>
                             <li><a href="#"><i class="fa fa-cog"></i>  设置</a></li>
-                            <li><a href="#"><i class="fa fa-sign-out"></i> 注销</a></li>
+                            <li><a href="<?php echo U("Enter/open2");?>"><i class="fa fa-sign-out"></i> 注销</a></li>
                         </ul>
                     </li>
 
@@ -304,9 +306,9 @@
                 活动页面
             </h3>
             <ul class="breadcrumb">
-                <li>
+<!--                 <li>
                     <a href="#">首页</a>
-                </li>
+                </li> -->
                 <li>
                     <a href="#">推广管理</a>
                 </li>
@@ -322,7 +324,7 @@
                     <div class="panel-heading">
                         <div class="btn-group iptReset page">
                           <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            <?php echo ($pageName); ?>
+                            <?php echo ($pageInfo['name']); ?>
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu">
@@ -331,7 +333,7 @@
                         </div>
                         <div class="btn-group iptReset form">
                           <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-                            <?php echo ($form); ?>
+                            <?php echo ($form['name']); ?>
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu">
@@ -346,22 +348,24 @@
                           </ul>
                         </div>
                         <a class="btn btn-success iptReset sub" role="button">搜 索</a>
-                        <div class="input-group iptReset" style="display:none;">
+                        <div class="input-group iptReset">
                             <span class="input-group-addon">推广链接</span>
-                            <input type="text" class="form-control" readonly="readonly" />
+                            <input type="text" class="form-control showUrl" readonly="readonly" />
                         </div>
                     </div>
                     <div class="panel-body">
                         <ul id="browser" class="filetree">
                             <li>
                                 <span class="folder">
-                                    <i class="fa fa-folder"></i>&nbsp;&nbsp;<?php echo ($pageName); ?>
+                                    <i class="fa fa-folder"></i>&nbsp;&nbsp;<strong><?php echo ($pageInfo['name']); ?></strong>
                                     <a><i class="fa fa-plus"></i></a>
                                 </span>
                                 <ul>
                                     <?php if(is_array($lList)): $i = 0; $__LIST__ = $lList;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$row): $mod = ($i % 2 );++$i;?><li>
-                                            <span class="file">
-                                                <i class="fa fa-file"></i>&nbsp;&nbsp;<?php echo ($row["keyword"]); ?>
+                                            <span class="file" id="<?php echo ($row["id"]); ?>" parameter="<?php echo ($row["parameter"]); ?>" url="<?php echo ($row["url"]); ?>">
+                                                <i class="fa fa-file"></i>&nbsp;&nbsp;
+                                                <strong class="getKeyword"><?php echo ($row["keyword"]); ?></strong>&nbsp;&nbsp;
+                                                <a class="getUrl">生成链接</a>
                                                 <a><i class="fa fa-edit"></i></a>
                                                 <a><i class="fa fa-trash-o"></i></a>
                                             </span>
@@ -388,11 +392,15 @@
             </div>
             <div class="logI">
                 <label>页面名称：</label>
-                <input type="text" name="name" />
+                <input id="<?php echo ($pageInfo['id']); ?>" type="text" name="pageName" disabled="disabled" value="<?php echo ($pageInfo['name']); ?>" />
             </div>
             <div class="logI">
-                <label>链接地址：</label>
-                <input type="text" name="url" />
+                <label>推广平台：</label>
+                <input id="<?php echo ($form['id']); ?>" type="text" name="form" disabled="disabled" value="<?php echo ($form['name']); ?>" />
+            </div>
+            <div class="logI keyword">
+                <label>链接名称：</label>
+                <input type="text" name="keyword" />
             </div>
             <div class="logB">
                 <button class="save" type="button">保&nbsp;&nbsp;&nbsp;存</button>
@@ -492,6 +500,93 @@
                 jumpUrl = '?fId='+fId+'&pId='+pId;    
                 window.location.href=jumpUrl;
             }    
+        });
+        $(".getUrl").click(function(){
+            var parameter = $(this).parent().attr("parameter");
+            var url = $(this).parent().attr("url");
+            $(".showUrl").val(url+'?ikey='+parameter);
+        });
+        $(".fa-plus").click(function(){
+            $(".logId input").val("0");
+            $("input[name='keyword']").attr("value","");
+            $(".logT").text("添加-活动页面");
+            $(".mask").show();
+            $(".log").show();
+        });
+        $(".save").click(function(){
+            var pId = parseInt($("input[name='pageName']").attr("id"));
+            var fId = parseInt($("input[name='form']").attr("id"));
+            var keyword = $(".keyword input").val();
+            var id = $(".logId input").val();
+            if(pId==0 || fId==0){
+                alert("亲，还没有选择活动页面或推广平台呢");
+                $(".cancel").click();
+            }else{
+                if(keyword==''){
+                    alert("输入不能有空");
+                }else{
+                    $.get(
+                        '<?php echo U("User/editPage2");?>',
+                        {id:id,form:fId,pId:pId,keyword:keyword},
+                        function(data){
+                            if(data==0){
+                                alert("操作成功");
+                                location.reload();
+                            }
+                            if(data==1){
+                                alert("输入不能有空");
+                            }
+                            if(data==2){
+                                alert("链接名称已存在");
+                            }
+                            if(data==3){
+                                alert("操作失败");
+                            }
+                            if(data==4){
+                                alert("亲，还没有选择活动页面或推广平台呢");
+                            }
+                            if(data==5){
+                                alert("此活动页面可能已被删除");
+                            }
+                            if(data==6){
+                                alert("此推广平台可能已被删除");
+                            }
+                        },
+                        "json"
+                    );
+                }
+            }
+        });
+        $(".cancel").click(function(){
+            $(".mask").hide();
+            $(".log").hide();
+        });
+        $(".fa-edit").click(function(){
+            var jdTr = $(this).parent().parent();
+            $("input[name='id']").val(jdTr.attr("id"));
+            $("input[name='keyword']").attr("value",jdTr.find(".getKeyword").text().trim());
+            $(".logT").text("修改-活动页面");
+            $(".log").show();
+            $(".mask").show();
+        });
+        $(".fa-trash-o").click(function(){
+            if(confirm("确定删除这条数据")){
+                var id = $(this).parent().parent().attr("id");
+                $.get(
+                        '<?php echo U("User/delPage2");?>',
+                        {id:id},
+                        function(data){
+                            if(data==0){
+                                alert("删除成功");
+                                location.reload();
+                            }
+                            if(data==1){
+                                alert("删除失败");
+                            }
+                        },
+                        "json"
+                    );
+            }
         });
     });
 </script>

@@ -56,12 +56,12 @@
                 <ul class="nav nav-pills nav-stacked custom-nav">
                   <li><a href="#"><i class="fa fa-user"></i> <span>个人信息</span></a></li>
                   <li><a href="#"><i class="fa fa-cog"></i> <span>设置</span></a></li>
-                  <li><a href="#"><i class="fa fa-sign-out"></i> <span>注销</span></a></li>
+                  <li><a href="<?php echo U("Enter/open2");?>"><i class="fa fa-sign-out"></i> <span>注销</span></a></li>
                 </ul>
             </div>
             <!--侧边导航栏 start-->
             <ul class="nav nav-pills nav-stacked custom-nav">
-                <li class="active"><a href="index.html"><i class="fa fa-home"></i> <span>首页</span></a></li>
+                <!-- <li class="active"><a href="index.html"><i class="fa fa-home"></i> <span>首页</span></a></li> -->
                 <li class="menu-list"><a href="#"><i class="fa fa-th-list"></i> <span>推广管理</span></a>
                     <ul class="sub-menu-list">
                         <li><a href="<?php echo U('User/page1');?>"> 用户管理</a></li>
@@ -272,7 +272,7 @@
                         <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
                             <li><a href="#"><i class="fa fa-user"></i>  个人信息</a></li>
                             <li><a href="#"><i class="fa fa-cog"></i>  设置</a></li>
-                            <li><a href="#"><i class="fa fa-sign-out"></i> 注销</a></li>
+                            <li><a href="<?php echo U("Enter/open2");?>"><i class="fa fa-sign-out"></i> 注销</a></li>
                         </ul>
                     </li>
 
@@ -289,9 +289,9 @@
                 高级表格
             </h3>
             <ul class="breadcrumb">
-                <li>
+<!--                 <li>
                     <a href="index.html">首页</a>
-                </li>
+                </li> -->
                 <li>
                     <a href="dynamic_table.html">推广管理</a>
                 </li>
@@ -331,7 +331,10 @@
         <tbody>
         <?php if(is_array($list)): $i = 0; $__LIST__ = $list;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$row): $mod = ($i % 2 );++$i;?><tr class="gradeA">
                 <td>
-                    <p><?php echo ($row["uname"]); ?> <?php echo ($row["phone"]); ?> [<?php echo ($row["num"]); ?>]</p>
+                    <p><?php echo ($row["uname"]); ?> <?php echo ($row["phone"]); ?> 
+                        <?php if($row['num']==1): ?><font color="#01b468">新</font>
+                            <?php else: ?><font color="#01b468">[<?php echo ($row["num"]); ?>]</font><?php endif; ?>
+                    </p>
                     <?php echo ($row["phoneArea"]); ?>
                 </td>
                 <td>
