@@ -26,8 +26,11 @@
   .file{cursor:pointer;}
   a{display:none;}
   .iptReset{margin:10px 10px;}
-  #browser li ul li{margin-top:10px;}
-  #browser li ul{overflow-y:scroll;height:500px;}
+  #browser li{margin-top:10px;font-size:14px;}
+  #browser li ul{display:none;}
+  #browser{overflow-y:scroll;height:500px;}
+  #browser .file a{display:none;}
+  /*#browser li ul{overflow-y:scroll;height:500px;}*/
 
   .log{height:50%;width:50%;left:25%;top:25%;border:1px solid #e0e0e0;position:absolute;z-index:999;background:white;font-size:16px;display:none;}
   .log .logT{width:100%;height:15%;padding:3% 0 0 2%;background:#f0f0f0;color:#8e8e8e;font-weight:bold;}
@@ -49,11 +52,11 @@
 
         <!--logo and ico start-->
         <div class="logo">
-            <a href="index.html"><img src="__PUBLIC__/images/logo.png" alt=""></a>
+            <a href="{:U('User/page1')}"><img src="__PUBLIC__/images/logo.png" alt=""></a>
         </div>
 
         <div class="logo-icon text-center">
-            <a href="index.html"><img src="__PUBLIC__/images/logo_icon.png" alt=""></a>
+            <a href="{:U('User/page1')}"><img src="__PUBLIC__/images/logo_icon.png" alt=""></a>
         </div>
         <!--logo and ico end-->
 
@@ -328,7 +331,7 @@
                             <span class="caret"></span>
                           </button>
                           <ul class="dropdown-menu" role="menu">
-                            <volist name="pList" id="row">
+                            <volist name="pist" id="row">
                                 <li><a pId="{$row.id}">{$row.name}</a></li>
                             </volist>
                           </ul>
@@ -350,6 +353,7 @@
                           </ul>
                         </div>
                         <a class="btn btn-success iptReset sub" role="button">搜 索</a>
+                        <a class="btn btn-success iptReset function" type="folder-top" role="button">添加新目录</a>
                         <div class="input-group iptReset">
                             <span class="input-group-addon">推广链接</span>
                             <input type="text" class="form-control showUrl" readonly="readonly" />
@@ -357,25 +361,97 @@
                     </div>
                     <div class="panel-body">
                         <ul id="browser" class="filetree">
-                            <li>
-                                <span class="folder">
-                                    <i class="fa fa-folder"></i>&nbsp;&nbsp;<strong>{$pageInfo['name']}</strong>
-                                    <a><i class="fa fa-plus"></i></a>
-                                </span>
-                                <ul>
-                                    <volist name="lList" id="row">
+                            <?php foreach($list as $v0){
+                                if($v0['pId']==0){
+                            ?>
+                                <li>
+                                    <span class="folder" name="{$v0.id}">
+                                        <i class="fa fa-folder">&nbsp;</i><strong>{$v0.name}</strong>
+                                        <a>
+                                            <span class="fa fa-plus function" type="folder">新目录&nbsp;&nbsp;</span><span type="folder" class="fa fa-plus function">新链接&nbsp;&nbsp;</span><span type="folder" class="fa fa-edit function">修改&nbsp;&nbsp;</span><span type="folder" class="fa fa-trash-o">删除</span>
+                                        </a>
+                                    </span>
+                                    <ul>
+                                        <?php foreach($list as $v1){
+                                            if($v1['pId']==$v0['id']){
+                                        ?>
                                         <li>
-                                            <span class="file" id="{$row.id}" parameter="{$row.parameter}" url="{$row.url}">
-                                                <i class="fa fa-file"></i>&nbsp;&nbsp;
-                                                <strong class="getKeyword">{$row.keyword}</strong>&nbsp;&nbsp;
-                                                <a class="getUrl">生成链接</a>
-                                                <a><i class="fa fa-edit"></i></a>
-                                                <a><i class="fa fa-trash-o"></i></a>
+                                            <span class="folder" name="{$v1.id}">
+                                                <i class="fa fa-folder">&nbsp;</i><strong>{$v1.name}</strong>
+                                                <a>
+                                                    <span type="folder" class="fa fa-plus function">新目录&nbsp;&nbsp;</span><span type="folder" class="fa fa-plus function">新链接&nbsp;&nbsp;</span><span type="folder" class="fa fa-edit function">修改&nbsp;&nbsp;</span><span type="folder" class="fa fa-trash-o">删除</span>
+                                                </a>
                                             </span>
+                                            <ul>
+                                                <?php
+                                                foreach($list as $v2){
+                                                    if($v2['pId']==$v1['id']){
+                                                ?>
+                                                    <li>
+                                                        <span class="folder" name="{$v2.id}">
+                                                            <i class="fa fa-folder">&nbsp;</i><strong>{$v2.name}</strong>
+                                                            <a>
+                                                                <span type="folder" class="fa fa-plus function">新链接&nbsp;&nbsp;</span><span type="folder" class="fa fa-edit function">修改&nbsp;&nbsp;</span><span type="folder" class="fa fa-trash-o">删除</span>
+                                                            </a>
+                                                        </span>
+                                                        <ul>
+                                                            <volist name="kist" id="k3">
+                                                                <eq name="k3.lId" value="$v2['id']">
+                                                                    <li>
+                                                                        <span class="file" id="{$k3.id}" parameter="{$k3.parameter}" url="{$k3.url}">
+                                                                            <i class="fa fa-file"></i>&nbsp;
+                                                                            <strong class="getKeyword">{$k3.name}</strong>&nbsp;&nbsp;
+                                                                            <a>
+                                                                                <span class="getUrl">生成链接&nbsp;&nbsp;</span><span class="fa fa-edit function" type="file">修改&nbsp;&nbsp;</span><span class="fa fa-trash-o" type="file">删除</span>
+                                                                            </a>
+                                                                        </span>
+                                                                    </li>
+                                                                </eq>
+                                                            </volist>
+                                                        </ul>
+                                                    </li>
+                                                <?php
+                                                }
+                                                }   
+                                                ?>
+                                                <volist name="kist" id="k2">
+                                                    <eq name="k2.lId" value="$v1['id']">
+                                                        <li>
+                                                            <span class="file" id="{$k2.id}" parameter="{$k2.parameter}" url="{$k2.url}">
+                                                                <i class="fa fa-file"></i>&nbsp;
+                                                                <strong class="getKeyword">{$k2.name}</strong>&nbsp;&nbsp;
+                                                                <a>    
+                                                                    <span class="getUrl">生成链接&nbsp;&nbsp;</span><span class="fa fa-edit function" type="file">修改&nbsp;&nbsp;</span><span class="fa fa-trash-o" type="file">删除</span>
+                                                                </a>
+                                                            </span>
+                                                        </li>
+                                                    </eq>
+                                                </volist>
+                                            </ul>    
                                         </li>
-                                    </volist>
-                                </ul>
-                            </li>
+                                        <?php
+                                        }
+                                        }   
+                                        ?>
+                                        <volist name="kist" id="k1">
+                                            <eq name="k1.lId" value="$v0['id']">
+                                                <li>
+                                                    <span class="file" id="{$k1.id}" parameter="{$k1.parameter}" url="{$k1.url}">
+                                                        <i class="fa fa-file"></i>&nbsp;
+                                                        <strong class="getKeyword">{$k1.name}</strong>&nbsp;&nbsp;
+                                                        <a>    
+                                                            <span class="fa fa-magnet getUrl">生成链接&nbsp;&nbsp;</span><span class="fa fa-edit function" type="file">修改&nbsp;&nbsp;</span><span class="fa fa-trash-o" type="file">删除</span>
+                                                        </a>
+                                                    </span>
+                                                </li>
+                                            </eq>
+                                        </volist>
+                                    </ul>
+                                </li>
+                            <?php
+                            } 
+                            }
+                            ?>
                         </ul>
                     </div>
                 </div>
@@ -393,6 +469,10 @@
             <div style="display:none;" class="logId">
                 <label>id：</label>
                 <input type="text" name="id" />
+            </div>
+            <div style="display:none;" class="logType">
+                <label>type：</label>
+                <input type="text" name="type" />
             </div>
             <div class="logI">
                 <label>页面名称：</label>
@@ -442,14 +522,16 @@
 <script>
     jQuery(document).ready(function() {
         TreeView.init();
-        $(".folder").click(function(){
-            var fileDp = $(".file").css("display");
+        $(".fa-folder").click(function(){
+            var fileUl = $(this).parent().parent().find("ul");
+            var fileDp = fileUl.css("display");
             if(fileDp=="none"){
-                $(".file").css("display","block");    
+                fileUl.css("display","block");    
             }else{
-                $(".file").css("display","none");
+                fileUl.css("display","none");
             }
         });
+        $(".folder strong").click(function(){$(this).parent().find(".fa-folder").click();});
         var jumpUrl = '';
         var fId = 0;
         var pId = 0;
@@ -506,23 +588,74 @@
             }    
         });
         $(".getUrl").click(function(){
-            var parameter = $(this).parent().attr("parameter");
-            var url = $(this).parent().attr("url");
+            var parameter = $(this).parent().parent().attr("parameter");
+            var url = $(this).parent().parent().attr("url");
             $(".showUrl").val(url+'?ikey='+parameter);
         });
-        $(".fa-plus").click(function(){
-            $(".logId input").val("0");
-            $("input[name='keyword']").attr("value","");
-            $(".logT").text("添加-活动页面");
+        $(".function").click(function(){
+            var operArr = ["添加-新目录","修改-新目录","添加-新链接","修改-新链接"];
+            var typeArr = ["editList","editUrl","addList","addUrl"];
+            var page = $(".page button").text().trim();
+            var form = $(".form button").text().trim();
+            var type = $(this).attr("type");
+            var id = 0;
+            var keyword = "";
+            var oper = "";
+            var keyLabel = "目录名称：";
+            var path = $(this).parent().parent();
+            if(type=="folder"){
+               oper = $(this).text().trim(); 
+               id = path.attr("name").trim();
+               switch(oper){
+                    case '新目录':
+                        oper = operArr[0];
+                        type = typeArr[2];
+                        break;
+                    case '新链接':
+                        oper = operArr[2];
+                        type = typeArr[3];
+                        keyLabel = "链接名称：";
+                        break;
+                    case '修改':
+                        oper = operArr[1];
+                        type = typeArr[0];
+                        keyword = path.find("strong").text().trim();
+                        break;
+                }
+            }
+            if(type=="file"){
+                oper = operArr[3];
+                type = typeArr[1];
+                id = path.attr("id");
+                keyLabel = "链接名称："
+                keyword = path.find("strong").text().trim();
+            }
+            if(type=="folder-top"){
+                oper = operArr[0];
+                type = typeArr[2];
+            }
+            // alert(oper);
+            // alert(type);
+            // alert(id);
+            // alert(page);
+            // alert(form);
+            // alert(keyword);
+            var fPath = $("#log");
+            fPath.find(".logId input").val(id);
+            fPath.find(".logType input").val(type);
+            fPath.find(".keyword input").val(keyword);
+            fPath.find(".keyword label").text(keyLabel);
+            fPath.find(".logT").text(oper);
             $(".mask").show();
-            $(".log").show();
+            $("#log").show();
         });
         $(".save").click(function(){
-            var pId = parseInt($("input[name='pageName']").attr("id"));
+            var pageId = parseInt($("input[name='pageName']").attr("id"));
             var fId = parseInt($("input[name='form']").attr("id"));
-            var keyword = $(".keyword input").val();
-            var id = $(".logId input").val();
-            if(pId==0 || fId==0){
+            var keyword = $(".keyword input").val().trim();
+            var id = $(".logId input").val().trim();
+            var type = $(".logType input").val().trim();
+            if(pageId==0 || fId==0){
                 alert("亲，还没有选择活动页面或推广平台呢");
                 $(".cancel").click();
             }else{
@@ -531,7 +664,7 @@
                 }else{
                     $.get(
                         '{:U("User/editPage2")}',
-                        {id:id,form:fId,pId:pId,keyword:keyword},
+                        {id:id,form:fId,pageId:pageId,name:keyword,type:type},
                         function(data){
                             if(data==0){
                                 alert("操作成功");
@@ -541,19 +674,7 @@
                                 alert("输入不能有空");
                             }
                             if(data==2){
-                                alert("链接名称已存在");
-                            }
-                            if(data==3){
                                 alert("操作失败");
-                            }
-                            if(data==4){
-                                alert("亲，还没有选择活动页面或推广平台呢");
-                            }
-                            if(data==5){
-                                alert("此活动页面可能已被删除");
-                            }
-                            if(data==6){
-                                alert("此推广平台可能已被删除");
                             }
                         },
                         "json"
@@ -565,20 +686,18 @@
             $(".mask").hide();
             $(".log").hide();
         });
-        $(".fa-edit").click(function(){
-            var jdTr = $(this).parent().parent();
-            $("input[name='id']").val(jdTr.attr("id"));
-            $("input[name='keyword']").attr("value",jdTr.find(".getKeyword").text().trim());
-            $(".logT").text("修改-活动页面");
-            $(".log").show();
-            $(".mask").show();
-        });
         $(".fa-trash-o").click(function(){
-            if(confirm("确定删除这条数据")){
-                var id = $(this).parent().parent().attr("id");
+            if(confirm("确定删除 (可能有关联数据一并删除)")){
+                var dPath = $(this).parent().parent();
+                var type = $(this).attr("type");
+                if(type=="file"){
+                    var id = dPath.attr("id");
+                }else{
+                    var id = dPath.attr("name");
+                }
                 $.get(
                         '{:U("User/delPage2")}',
-                        {id:id},
+                        {id:id,type:type},
                         function(data){
                             if(data==0){
                                 alert("删除成功");
@@ -594,6 +713,5 @@
         });
     });
 </script>
-
 </body>
 </html>

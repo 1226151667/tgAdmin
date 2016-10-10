@@ -32,11 +32,11 @@
 
         <!--logo and ico start-->
         <div class="logo">
-            <a href="index.html"><img src="__PUBLIC__/images/logo.png" alt=""></a>
+            <a href="{:U('User/page1')}"><img src="__PUBLIC__/images/logo.png" alt=""></a>
         </div>
 
         <div class="logo-icon text-center">
-            <a href="index.html"><img src="__PUBLIC__/images/logo_icon.png" alt=""></a>
+            <a href="{:U('User/page1')}"><img src="__PUBLIC__/images/logo_icon.png" alt=""></a>
         </div>
         <!--logo and ico end-->
 
@@ -324,11 +324,6 @@
             <th class="hidden-phone">时间</th>
             <th class="hidden-phone">验证</th>
         </tr>
-        <switch name="User.level">
-    <case value="1">value1</case>
-    <case value="2">value2</case>
-    <default />default
-</switch>
         </thead>
         <tbody>
         <volist name="list" id="row">
@@ -355,12 +350,12 @@
                             <default />未知
                         </switch>
                     </p>
-                    <a target="_blank" href="{$row.url}?ikey={$row.parameter}">
-                        {$row.pageName}>{$row.lKeyword}
+                    <a target="_blank" href="{$row.url}">
+                        {$row.AName}
                     </a>
                 </td>
                 <td>
-                    <a target="_blank" href="{$row.url}?ikey={$row.parameter}">
+                    <a target="_blank" href="{$row.url}">
                         {$row.keyword}
                     </a>
                 </td>

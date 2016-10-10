@@ -1,26 +1,25 @@
 <?php
 // 本类由系统自动生成，仅供测试用途
 class UserAction extends Action {
-    public function checkLogin(){
-        if(!isset($_SESSION['uname'])){
-            $this->redirect("Enter/open1");
-        }
-    }
     public function page1(){
-        $this->checkLogin();
-
-    	$obj = 	M("user");
-    	$list = $obj->field("t0.*,l.keyword as lKeyword,l.form,l.parameter,p.name as pageName,p.url")->
-            alias("t0")->join(array("left join link l on l.id=t0.lId","left join page p on p.id=l.pId"))->select();
-    	$this->assign("list",$list);
-		$this->display("user");
+        $obj =  M("user");
+        $list = $obj->order("t0.tm desc")->field("t0.*,CONCAT(tt.url,'?iskey=',tt.parameter) as url,tt.AName,tt.form")->alias("t0")->join(
+            array("left join (select t0.*,CONCAT(l.AName,'>',t0.name) as AName,l.form,p.url 
+            from keyword t0 left join 
+            (select t0.*,if(t0.pId=0,t0.name,
+                (select if(t1.pId=0,CONCAT(t1.name,'>',t0.name),
+                    (select if(t2.pId=0,CONCAT(t2.name,'>',t1.name,'>',t0.name),0) as AName from list t2 where t2.id=t1.pId)) as AName 
+                        from list t1 where t0.pId=t1.id)) as AName from list t0) l on l.id=t0.lId left join page p on p.id=l.pageId) tt on tt.id=t0.kId"))
+                            ->select();
+        $this->assign("list",$list);
+        // var_dump($list);exit;
+        $this->display("user");
     }
     public function page2(){
-        $this->checkLogin();
-
-        $obj = M("link");
+        $obj = M("list");
         $page = M("page");
-        $where = 'pId=0';
+        $keyword = M("keyword");
+        $where = 'pageId=0';
         $formArr = array("推广平台","百度","360","搜狗","新浪扶翼","百度网盟","粉丝通","神马","陌陌");
         $form = array();
         $pageInfo = array();
@@ -39,77 +38,88 @@ class UserAction extends Action {
                 $form['name'] = $formArr[$fId];
             }
             if($pId && $fId){
-                $where = "form=".$fId." and pId=".$pId;
+                $where = "form=".$fId." and pageId=".$pId;
             }
         }
-        $lList = $obj->where($where)->order("t0.tm desc")->field("t0.*,p.name as pageName,p.url")->alias("t0")->join("page p on p.id=t0.pId")->select();
-        $pList = $page->select();
+        $list = $obj->where($where)->select();
+        $kist = $keyword->field("t0.*,p.url")->alias("t0")->join(array("left join list l on l.id=t0.lId","left join page p on p.id=l.pageId"))->select();
+        $pist = $page->select();
+        // var_dump($list);
+        // var_dump($kist);
+        // var_dump($pist);
+        // exit;
         $this->assign("pageInfo",$pageInfo);
         $this->assign("form",$form);
-        $this->assign("lList",$lList);
-        $this->assign("pList",$pList);
+        $this->assign("list",$list);
+        $this->assign("kist",$kist);
+        $this->assign("pist",$pist);
 		$this->display("link");
     }
     public function editPage2(){
-        $obj = M("link");
-        $page = M("page");
-        // $S = array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z");
+        $list = M("list");
+        $keyword = M("keyword");
         if($_GET){
             $id = $this->_get("id");
+            $type = $this->_get("type");
             $data = array();
-            $data['form'] = (int)$_GET['form'];
-            $data['pId'] = (int)$_GET["pId"];
-            $data['keyword'] = trim($this->_get("keyword"));
-            $data['tm'] = date("Y-m-d H:i:s");
-            $data['parameter'] = rand(100000,999999).time().rand(100000,999999);
-            if($data['form']==0 || $data['pId']==0){
-                printf(json_encode(4));
-                exit;
+            $data['name'] = trim($this->_get("name"));
+            if($data['name']==""){
+                printf(json_encode(1));exit;
             }
-            $pf = $page->where("id={$data['pId']}")->find();
-            // var_dump($pf);exit;
-            if($pf==null){
-                printf(json_encode(5));
-                exit;
+            if($type=="addList"){
+                $data['pId'] = $id;
+                $data['pageId'] = trim($this->_get("pageId"));
+                $data['form'] = trim($this->_get("form"));
+                $data['name'] = trim($this->_get("name"));
+                $data['tm'] = date("Y-m-d H:i:s");
+                $rs = $list->add($data);
             }
-            if($data['form']>8 || $data['form']<1){
-                printf(json_encode(6));
-                exit;
+            if($type=="editList"){
+                $rs = $list->where("id={$id}")->save($data);
             }
-            if($data['keyword']==''){
-                printf(json_encode(1));
-                exit;
+            if($type=="addUrl"){
+                $data['lId'] = $id;
+                $data['tm'] = date("Y-m-d H:i:s");
+                $data['parameter'] = rand(100000,999999).time().rand(100,999);
+                $rs = $keyword->add($data);
             }
-            $row = $obj->where("keyword='{$data['keyword']}'")->find();
-            if($id==0){
-                if($row){
-                    printf(json_encode(2));
-                    exit;
-                }else{
-                    $rs = $obj->add($data);
-                }
-            }else{
-                if($row && $row['id']!=$id){
-                    printf(json_encode(2));
-                    exit;
-                }else{
-                    $rs = $obj->where("id={$id}")->save($data);
-                }
+            if($type=="editUrl"){
+                $rs = $keyword->where("id={$id}")->save($data);
             }
             if($rs===false){
-                printf(json_encode(3));
-                exit;
+                printf(json_encode(2));exit;
             }else{
-                printf(json_encode(0));
-                exit;
+                printf(json_encode(0));exit;
             }
         }
     }
     public function delPage2(){
-        $obj = M("link");
+        $list = M("list");
+        $keyword = M("keyword");
         if($_GET){
             $id = $this->_get("id");
-            $rs = $obj->where("id={$id}")->delete();
+            $type = $this->_get("type");
+            if($type=="file"){
+                $rs = $keyword->where("id={$id}")->delete();
+            }
+            if($type=="folder"){
+                $listIn = "({$id},";
+                $subList1 = $list->where("pId={$id}")->select();
+                if(!empty($subList1)){
+                    foreach($subList1 as $row1){
+                        $subList2 = $list->where("pId={$row1['id']}")->select();
+                        $listIn .= "{$row1['id']},";
+                        if(!empty($subList2)){
+                            foreach($subList2 as $row2){
+                                $listIn .="{$row2['id']},";      
+                            }
+                        }
+                    }
+                }
+                $listIn = trim($listIn,",").")";
+                $rs = $list->where("id in {$listIn}")->delete();
+                $keyword->where("lId in {$listIn}")->delete();
+            }
             if($rs){
                 printf(json_encode(0));
                 exit;
@@ -120,12 +130,10 @@ class UserAction extends Action {
         }
     }
     public function page3(){
-        $this->checkLogin();
-        
         $obj = M("page");
         $list = $obj->select();
         $this->assign("list",$list);
-		$this->display("page");
+        $this->display("page");
     }
     public function editPage3(){
         $obj = M("page");
@@ -165,13 +173,22 @@ class UserAction extends Action {
         }
     }
     public function delPage3(){
-        $obj = M("page");
-        $user = M("user");
-        $link = M("link");
+        $page = M("page");
+        $list = M("list");
+        $key = M("keyword");
         if($_GET){
+            $keyIn = "(";
             $id = $this->_get("id");
-            $rs = $obj->where("id={$id}")->delete();
-            $rs1 = $link->where("pId={$id}")->delete();
+            $rs = $page->where("id={$id}")->delete();
+            $listArr = $list->where("pageId={$id}")->select();
+            if($listArr){
+                foreach($listArr as $row){
+                    $keyIn .= "{$row['id']},";
+                }
+            }
+            $keyIn = trim($keyIn,",").")";
+            $key->where("lId in {$keyIn}")->delete();
+            $list->where("pageId={$id}")->delete();
             if($rs){
                 printf(json_encode(0));
                 exit;
